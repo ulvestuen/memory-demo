@@ -1,0 +1,28 @@
+# When docker image is built from this file, the image bundles a version of OpenJDK, which is available under
+# licensing specified by "GNU General Public License, version 2, with the Classpath Exception".
+# For details, see http://openjdk.java.net/legal/gplv2+ce.html
+
+# When docker image is built from this file, the image bundles a version of Spring Boot, which is available under
+# a "Apache License 2.0" license. For details, see https://github.com/spring-projects/spring-boot/blob/master/LICENSE.txt
+
+FROM maven:3.6.3-openjdk-8-slim as builder
+RUN groupadd -g 999 memory-demo && \
+    useradd -r -u 999 -g memory-demo memory-demo
+
+ADD --chown=memory-demo:memory-demo ./ /home/memory-demo/
+WORKDIR /home/memory-demo
+USER memory-demo
+RUN mvn clean install
+
+
+
+FROM openjdk:8-jre-slim
+RUN groupadd -g 999 memory-demo && \
+    useradd -r -u 999 -g memory-demo memory-demo
+
+COPY --from=builder /home/memory-demo/target/memory-demo.jar /home/memory-demo/memory-demo.jar
+WORKDIR /home/memory-demo
+
+USER memory-demo
+EXPOSE 8080
+ENTRYPOINT ["java","-jar", "memory-demo.jar"]

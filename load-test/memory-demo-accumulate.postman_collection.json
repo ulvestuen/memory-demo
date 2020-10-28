@@ -1,0 +1,99 @@
+{
+	"info": {
+		"_postman_id": "758e6e01-4862-47eb-a834-75396e18b7b1",
+		"name": "memory-demo-accumulate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/accumulate (j8)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/accumulate/{{nIntegers}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"accumulate",
+						"{{nIntegers}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/accumulate (j8u181)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8181/accumulate/{{nIntegers}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8181",
+					"path": [
+						"accumulate",
+						"{{nIntegers}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/accumulate (j11)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/accumulate/{{nIntegers}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"accumulate",
+						"{{nIntegers}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "cf66ca00-ed96-42e0-a529-bb23eea06036",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "6eafeb46-6cad-4c94-9e3b-8e6e51c659a9",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "ec37c41f-aa95-414a-be4d-f1431ca37160",
+			"key": "nIntegers",
+			"value": "1024"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

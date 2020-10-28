@@ -1,0 +1,99 @@
+{
+	"info": {
+		"_postman_id": "7d039ea6-a8b1-431e-bd8f-c1427733793e",
+		"name": "memory-demo-consume",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/consume (j8)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/consume/{{nIntegers}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"consume",
+						"{{nIntegers}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/consume (j8u181)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8181/consume/{{nIntegers}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8181",
+					"path": [
+						"consume",
+						"{{nIntegers}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/consume (j11)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/consume/{{nIntegers}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"consume",
+						"{{nIntegers}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "d8a26790-051c-4831-baef-e503f8db3a75",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "d9417e05-4414-4ee9-b3b3-ccd0986e7b68",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "20ff5e32-ba6b-4565-b37c-f22efa9cbe9a",
+			"key": "nIntegers",
+			"value": "1024"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

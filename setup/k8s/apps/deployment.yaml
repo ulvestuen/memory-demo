@@ -1,0 +1,90 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memory-demo-j8
+  labels:
+    app: memory-demo-j8
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memory-demo-j8
+  template:
+    metadata:
+      labels:
+        app: memory-demo-j8
+    spec:
+      containers:
+        - name: memory-demo-j8
+          image: memory-demo-j8:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "550Mi"
+            requests:
+              cpu: "250m"
+              memory: "100Mi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memory-demo-j8u181
+  labels:
+    app: memory-demo-j8u181
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memory-demo-j8u181
+  template:
+    metadata:
+      labels:
+        app: memory-demo-j8u181
+    spec:
+      containers:
+        - name: memory-demo-j8u181
+          image: memory-demo-j8u181:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "550Mi"
+            requests:
+              cpu: "250m"
+              memory: "100Mi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memory-demo-j11
+  labels:
+    app: memory-demo-j11
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memory-demo-j11
+  template:
+    metadata:
+      labels:
+        app: memory-demo-j11
+    spec:
+      containers:
+        - name: memory-demo-j11
+          image: memory-demo-j11:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "550Mi"
+            requests:
+              cpu: "250m"
+              memory: "100Mi"

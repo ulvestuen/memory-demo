@@ -1,0 +1,72 @@
+version: "3.7"
+services:
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      - memory-demo-j8
+      - memory-demo-j11
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+  memory-demo-j8:
+    container_name: memory-demo-j8
+    build:
+      context: ../..
+      dockerfile: Dockerfile-j8
+    ports:
+    - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 150M
+        reservations:
+          cpus: '0.25'
+          memory: 100M
+
+  memory-demo-j8u181:
+    container_name: memory-demo-j8u181
+    build:
+      context: ../..
+      dockerfile: Dockerfile-j8u181
+    ports:
+      - "8181:8080"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 150M
+        reservations:
+          cpus: '0.25'
+          memory: 100M
+
+  memory-demo-j11:
+    container_name: memory-demo-j11
+    build:
+      context: ../..
+      dockerfile: Dockerfile-j11
+    ports:
+      - "8081:8080"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 150M
+        reservations:
+          cpus: '0.25'
+          memory: 100M
