@@ -56,12 +56,15 @@ jobs:
         uses: ./
         env:
           TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+          TF_BACKEND_ORGANIZATION: ${{ secrets.TF_BACKEND_ORGANIZATION }}
+          TF_BACKEND_WORKSPACE: ${{ secrets.TF_BACKEND_WORKSPACE }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
           INSTANCE_TYPE: m4.large
           ASG_DESIRED_CAPACITY: 1
           ASG_MAX_SIZE: 3
           ASG_MIN_SIZE: 1
       - name: Print command for updating local kubeconfig for connection to the provisioned EKS cluster
-        run: echo "aws eks --region ${{ steps.aws-eks-provisioner.outputs.region }} update-kubeconfig --name ${{ steps.aws-eks-provisioner.outputs.cluster_name }}"
+        run: echo "aws --region ${{ steps.aws-eks-provisioner.outputs.region }} eks update-kubeconfig --name ${{ steps.aws-eks-provisioner.outputs.cluster_name }}"
   deploy:
     needs: create_test_environment
     name: Enable usage of Github Container Registry in EKS cluster and deploy applications according to kustomization.yaml
