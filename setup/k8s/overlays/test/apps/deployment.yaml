@@ -1,0 +1,51 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memory-demo-j8
+  labels:
+    app: memory-demo-j8
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memory-demo-j8
+  template:
+    spec:
+      containers:
+        - name: memory-demo-j8
+          image: ghcr.io/ulvestuen/memory-demo-j8:latest
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memory-demo-j8u181
+  labels:
+    app: memory-demo-j8u181
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memory-demo-j8u181
+  template:
+    spec:
+      containers:
+        - name: memory-demo-j8u181
+          image: ghcr.io/ulvestuen/memory-demo-j8u181:latest
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memory-demo-j11
+  labels:
+    app: memory-demo-j11
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memory-demo-j11
+  template:
+    spec:
+      containers:
+        - name: memory-demo-j11
+          image: ghcr.io/ulvestuen/memory-demo-j11:latest

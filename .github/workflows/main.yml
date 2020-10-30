@@ -1,8 +1,9 @@
-on: [workflow_dispatch]
+on: [ workflow_dispatch ]
 
 jobs:
-  multi-registries:
+  build_images:
     runs-on: ubuntu-latest
+    name: Build and push docker images to Github Container Registry
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -37,3 +38,69 @@ jobs:
           file: ./Dockerfile-j11
           push: true
           tags: ghcr.io/ulvestuen/memory-demo-j11:latest
+  create_test_environment:
+    needs: build_images
+    outputs:
+      region: ${{ steps.aws-eks-provisioner.outputs.region }}
+      cluster_name: ${{ steps.aws-eks-provisioner.outputs.cluster_name }}
+    runs-on: ubuntu-latest
+    name: Provision an AWS EKS cluster as test environment
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: ulvestuen/aws-eks-provisioner
+          ref: master
+      - name: Provision AWS EKS
+        id: aws-eks-provisioner
+        uses: ./
+        env:
+          TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+          INSTANCE_TYPE: m4.large
+          ASG_DESIRED_CAPACITY: 1
+          ASG_MAX_SIZE: 3
+          ASG_MIN_SIZE: 1
+      - name: Print command for updating local kubeconfig for connection to the provisioned EKS cluster
+        run: echo "aws eks --region ${{ steps.aws-eks-provisioner.outputs.region }} update-kubeconfig --name ${{ steps.aws-eks-provisioner.outputs.cluster_name }}"
+  deploy:
+    needs: create_test_environment
+    name: Enable usage of Github Container Registry in EKS cluster and deploy applications according to kustomization.yaml
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install aws cli
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+      - name: Install kubectl
+        run: |
+          curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin/kubectl
+      - name: Install kustomize
+        run: |
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ needs.create_test_environment.outputs.region }}
+      - name: Store kubeconfig
+        run: |
+          aws --region ${{ needs.create_test_environment.outputs.region }} eks update-kubeconfig --name ${{ needs.create_test_environment.outputs.cluster_name }}
+      - name: Create docker-registry secret in AWS EKS cluster
+        run: |
+          kubectl create secret docker-registry regcred --docker-server=ghcr.io --docker-username=${{ github.repository_owner }} --docker-password=${{ secrets.GHCR_ACCESS_TOKEN }} --docker-email=example@example.com
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build kustomization
+        run: |
+          kustomize build ./setup/k8s/overlays/test/ > built_resource_config.yaml
+      - name: Substitute variables
+        run: |
+          sed -i 's/GRAFANA_USER_B64/${{ secrets.GRAFANA_USER_B64 }}/g' built_resource_config.yaml
+          sed -i 's/GRAFANA_PASSWORD_B64/${{ secrets.GRAFANA_PASSWORD_B64 }}/g' built_resource_config.yaml
+      - name: Apply resources to AWS EKS cluster
+        run: |
+          kubectl apply -f built_resource_config.yaml
