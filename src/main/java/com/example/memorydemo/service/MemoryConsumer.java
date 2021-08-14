@@ -10,15 +10,15 @@ import java.util.stream.IntStream;
 @Component
 public class MemoryConsumer {
 
-    private final List<Integer> consumedMemory = new ArrayList<>();
+    private final List<Integer> numberList = new ArrayList<>();
 
     public Integer accumulateMemory(final int nIntegers) {
-        consumedMemory.addAll(
+        numberList.addAll(
                 IntStream.range(0, nIntegers)
                          .boxed()
                          .collect(Collectors.toList())
         );
-        return consumedMemory.size();
+        return numberList.size();
     }
 
     public Integer consumeTemporarily(final int nIntegers) {

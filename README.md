@@ -4,7 +4,7 @@
 ### Docker Compose
 ```
 cd setup/docker-compose
-docker-compose --compatibility up --build -d
+docker compose up --build -d
 ```
 ### Minikube
 ```

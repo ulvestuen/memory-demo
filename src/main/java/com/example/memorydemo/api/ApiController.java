@@ -27,7 +27,7 @@ public class ApiController {
             method = RequestMethod.GET,
             produces = MediaType.TEXT_PLAIN_VALUE
     )
-    public ResponseEntity accumulateMemory(@PathVariable final int nIntegers) {
+    public ResponseEntity<String> accumulateMemory(@PathVariable final int nIntegers) {
         LOGGER.info("Request received for permanent memory accumulation of {} integers.", nIntegers);
         final Integer memoryLength = memoryConsumer.accumulateMemory(nIntegers);
         return ResponseEntity.ok("Accumulation endpoint called ok \n" + memoryLength + "\n");
@@ -38,7 +38,7 @@ public class ApiController {
             method = RequestMethod.GET,
             produces = MediaType.TEXT_PLAIN_VALUE
     )
-    public ResponseEntity consumeTemporarily(@PathVariable final int nIntegers) {
+    public ResponseEntity<String> consumeTemporarily(@PathVariable final int nIntegers) {
         LOGGER.info("Request received for temporary consumption of {} integers.", nIntegers);
         final Integer memoryLength = memoryConsumer.consumeTemporarily(nIntegers);
         return ResponseEntity.ok("Consume endpoint called ok \n" + memoryLength + "\n");
